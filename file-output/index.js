@@ -32,7 +32,7 @@ function writeClass(classObj, numOfTabs = 0) {
     content += "\n" + tabs + "{\n";
 
     for(var inClzz in classObj.innerClasses) {
-        content += writeClass(classObj.innerClasses[inClzz], numOfTabs + 1) + ",";
+        content += writeClass(classObj.innerClasses[inClzz], numOfTabs + 1) + "\n";
     }
 
     content = content.slice(0, -1);

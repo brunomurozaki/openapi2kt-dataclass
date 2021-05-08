@@ -44,7 +44,7 @@ function initClass(classes, schemaName) {
                 initProperty(this, this.properties, pName);
                 this.properties[pName].fillProperty(p);
 
-                if(schemaObj.required.includes(pName)) {
+                if(schemaObj.required && schemaObj.required.includes(pName)) {
                     this.properties[pName].required = true;
                 }
             }
@@ -70,8 +70,12 @@ function initProperty(parent, properties, propertyName) {
                     initClass(parent.innerClasses, this.name);
                     parent.innerClasses[this.name].fillClass(pObj.items);
                     this.type = "List<" + capitalize(this.name) + ">";
-                } else {
-                    this.type = "List<" + parseDataType(pObj.items) + ">";
+                } else if(pObj.items.type === undefined && pObj.items["$ref"]) {
+                    var ref = pObj.items["$ref"].split("/");
+                    this.type = "List<" + ref[ref.length -1] + ">";    
+                }
+                else {
+                    this.type = "List<" + parseDataType(pObj.items, "List ->" + this.name) + ">";
                 }
 
             } else if(pObj.type === undefined && pObj["$ref"]){
@@ -94,6 +98,16 @@ function parseDataType(pObj, pName) {
         break;
         case "integer": {
             dataType = "Int";
+        }
+        break;
+        case "number": {
+            if(pObj.format == "double") {
+                dataType = "double";
+            }
+        }
+        break;
+        case "boolean": {
+            dataType = "Boolean";
         }
         break;
         default: {
