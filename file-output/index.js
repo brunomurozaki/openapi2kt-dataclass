@@ -1,11 +1,14 @@
 import capitalize from '../utils/capitalize.js'
 import fs from 'fs'
 
-export default function output2KtDataClass(ktClasses, outputFolder = "./output/") {
+export default function output2KtDataClass(ktClasses, outputFolder = "./output/", packageName = "default") {
     
     for(var ktClzz in ktClasses) {
 
-        fs.writeFile(outputFolder + ktClzz + ".kt", writeClass(ktClasses[ktClzz]), function(err) {
+        var content = "package " + packageName + "\n\n";
+        content += writeClass(ktClasses[ktClzz]);
+
+        fs.writeFile(outputFolder + ktClzz + ".kt", content, function(err) {
             if(err)
                 console.error(err);
         })
