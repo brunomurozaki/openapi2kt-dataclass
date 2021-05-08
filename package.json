@@ -1,0 +1,24 @@
+{
+  "name": "openapi2kt-dataclass",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js openapi.json"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/brunomurozaki/openapi2kt-dataclass.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/brunomurozaki/openapi2kt-dataclass/issues"
+  },
+  "homepage": "https://github.com/brunomurozaki/openapi2kt-dataclass#readme",
+  "dependencies": {
+    "jsonfile": "^6.1.0"
+  },
+  "type": "module"
+}
