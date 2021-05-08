@@ -7,5 +7,5 @@ const inputFile = args[0];
 
 jsonfile.readFile(inputFile, function (err, obj) {
     var ktClasses = parse2kt(obj);
-    outputDataClass(ktClasses, "./output");
+    outputDataClass(ktClasses, "./output/");
 })
