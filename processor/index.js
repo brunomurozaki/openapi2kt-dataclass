@@ -64,6 +64,9 @@ function initProperty(parent, properties, propertyName) {
                 initClass(parent.innerClasses, this.name);
                 parent.innerClasses[this.name].fillClass(pObj);
                 this.type = capitalize(this.name);
+            } else if(pObj.type === undefined && pObj["$ref"]){
+                var ref = pObj["$ref"].split("/");
+                this.type = ref[ref.length -1];
             } else {
                 this.type = parseDataType(pObj);
             }
