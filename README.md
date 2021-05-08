@@ -1,0 +1,1 @@
+# openapi2kt-dataclass
