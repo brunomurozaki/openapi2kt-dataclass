@@ -1,6 +1,6 @@
 import capitalize from '../utils/capitalize.js'
 
-export default function parse2kt(inputObject) {
+export default function parse2object(inputObject) {
 
     const schemaList = inputObject.components.schemas;
 
@@ -43,6 +43,10 @@ function initClass(classes, schemaName) {
 
                 initProperty(this, this.properties, pName);
                 this.properties[pName].fillProperty(p);
+
+                if(schemaObj.required.includes(pName)) {
+                    this.properties[pName].required = true;
+                }
             }
         }
     }
@@ -53,6 +57,7 @@ function initProperty(parent, properties, propertyName) {
         "parent": parent,
         "name": propertyName,
         "type": "",
+        "required": false,
         "fillProperty": function(pObj) {
 
             if(pObj.type == "object") {

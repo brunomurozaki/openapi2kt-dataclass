@@ -1,7 +1,7 @@
 import capitalize from '../utils/capitalize.js'
 import fs from 'fs'
 
-export default function outputDataClass(ktClasses, outputFolder = "./output/") {
+export default function output2KtDataClass(ktClasses, outputFolder = "./output/") {
     
     for(var ktClzz in ktClasses) {
 
@@ -43,9 +43,15 @@ function writeProperties(properties, numOfTabs = 0) {
 
     var content = "";
     var tabs = "\t".repeat(numOfTabs);
+    var nullablePart = "?";
 
     for(var p in properties) {
-        content += "\n" + tabs + "var " + properties[p].name + ": " + properties[p].type + ",";
+        content += "\n" + tabs + "var " + properties[p].name + ": " + properties[p].type;
+        
+        if(!properties[p].required)
+            content += nullablePart;
+
+        content += ",";
     }
 
     content = content.slice(0, -1);
