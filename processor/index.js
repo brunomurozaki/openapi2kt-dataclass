@@ -59,22 +59,32 @@ function initProperty(parent, properties, propertyName) {
         "type": "",
         "required": false,
         "fillProperty": function(pObj) {
-
+            // TODO: handle ENUMs
             if(pObj.type == "object") {
                 initClass(parent.innerClasses, this.name);
                 parent.innerClasses[this.name].fillClass(pObj);
                 this.type = capitalize(this.name);
+            } else if(pObj.type == "array") {
+
+                if(pObj.items.type == "object") {
+                    initClass(parent.innerClasses, this.name);
+                    parent.innerClasses[this.name].fillClass(pObj.items);
+                    this.type = "List<" + capitalize(this.name) + ">";
+                } else {
+                    this.type = "List<" + parseDataType(pObj.items) + ">";
+                }
+
             } else if(pObj.type === undefined && pObj["$ref"]){
                 var ref = pObj["$ref"].split("/");
                 this.type = ref[ref.length -1];
             } else {
-                this.type = parseDataType(pObj);
+                this.type = parseDataType(pObj, this.name);
             }
         }
     }
 }
 
-function parseDataType(pObj) {
+function parseDataType(pObj, pName) {
 
     var dataType
     switch(pObj.type) {
@@ -86,8 +96,11 @@ function parseDataType(pObj) {
             dataType = "Int";
         }
         break;
-        default:
+        default: {
             dataType = "Any";
+            console.log(pName);
+        }
+            
     }
 
     return dataType;
