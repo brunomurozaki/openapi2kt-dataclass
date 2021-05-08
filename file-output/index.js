@@ -1,44 +1,51 @@
 import capitalize from '../utils/capitalize.js'
+import fs from 'fs'
 
-export default function outputDataClass(ktClasses, outputFolder) {
+export default function outputDataClass(ktClasses, outputFolder = "./output/") {
     
     for(var ktClzz in ktClasses) {
-        console.log(writeClass(ktClasses[ktClzz]));
+
+        fs.writeFile(outputFolder + ktClzz + ".kt", writeClass(ktClasses[ktClzz]), function(err) {
+            if(err)
+                console.error(err);
+        })
     }
 }
 
-function writeClass(classObj) {
+function writeClass(classObj, numOfTabs = 0) {
 
-    var content = "data class " + capitalize(classObj.name) + " (\n";
+    var tabs = "\t".repeat(numOfTabs);
+    var content = tabs + "data class " + capitalize(classObj.name) + " (\n";
     var properties = classObj.properties;
 
-    content += writeProperties(properties);
+    content += writeProperties(properties, numOfTabs + 1);
 
-    content += "\n)";
+    content += "\n" + tabs + ")";
 
     if(classObj.innerClasses && Object.keys(classObj.innerClasses).length === 0 && classObj.innerClasses.constructor === Object) {
         return content;
     }
 
-    content += "\n{\n";
+    content += "\n" + tabs + "{\n";
 
     for(var inClzz in classObj.innerClasses) {
-        content += writeClass(classObj.innerClasses[inClzz]) + ",";
+        content += writeClass(classObj.innerClasses[inClzz], numOfTabs + 1) + ",";
     }
 
     content = content.slice(0, -1);
 
-    content += "\n}\n";
+    content += "\n" + tabs + "}\n";
 
     return content;
 }
 
-function writeProperties(properties) {
+function writeProperties(properties, numOfTabs = 0) {
 
     var content = "";
+    var tabs = "\t".repeat(numOfTabs);
 
     for(var p in properties) {
-        content += "\n\tvar " + properties[p].name + ": " + properties[p].type + ",";
+        content += "\n" + tabs + "var " + properties[p].name + ": " + properties[p].type + ",";
     }
 
     content = content.slice(0, -1);

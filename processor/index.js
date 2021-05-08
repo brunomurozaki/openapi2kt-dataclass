@@ -44,7 +44,6 @@ function initClass(classes, schemaName) {
                 initProperty(this, this.properties, pName);
                 this.properties[pName].fillProperty(p);
             }
-
         }
     }
 }
