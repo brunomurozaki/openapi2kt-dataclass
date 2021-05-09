@@ -6,13 +6,32 @@ export default function output2KtDataClass(ktClasses, outputFolder = "./output/"
     for(var ktClzz in ktClasses) {
 
         var content = "package " + packageName + "\n\n";
-        content += writeClass(ktClasses[ktClzz]);
+
+        if(ktClasses[ktClzz].isEnum) {
+            content += writeEnum(ktClasses[ktClzz]);
+        } else {
+            content += writeClass(ktClasses[ktClzz]);
+        }
 
         fs.writeFile(outputFolder + ktClzz + ".kt", content, function(err) {
             if(err)
                 console.error(err);
         })
     }
+}
+
+function writeEnum(enumObj, numOfTabs = 0) {
+    var tabs = "\t".repeat(numOfTabs);
+    var content = tabs + "enum class " + capitalize(enumObj.name) + " {\n";
+
+    for(var i = 0; i < enumObj.values.length; i++) {
+        content += "\n" + tabs + "\t" + enumObj.values[i] + ","
+    }
+
+    content = content.slice(0, -1);
+    content += "\n}";
+
+    return content;
 }
 
 function writeClass(classObj, numOfTabs = 0) {

@@ -9,11 +9,9 @@ export default function parse2object(inputObject) {
     for(var schemaName in schemaList) {
 
         var schemaObj = schemaList[schemaName]
-        var properties = schemaObj.properties;
-        var requiredProperties = schemaObj.required;
 
-        if(schemaObj.type != "object") {
-            console.error("Schema " + schemaName + " is not an Object!");
+        if(schemaObj.type != "object" && !schemaObj.enum) {
+            console.error("Schema " + schemaName + " is not an Object nor ENUM!");
             continue;
         }
 
@@ -29,11 +27,14 @@ function initClass(classes, schemaName) {
         "name": schemaName,
         "properties": {},
         "innerClasses": {},
+        "isEnum": false,
+        "values": [],
         "fillClass": function(schemaObj) {
             
-            if(schemaObj.type != "object") {
-                console.error("Schema is not an Object!");
-                return
+            if(schemaObj.type != "object" && schemaObj.enum) {
+                this.isEnum = true;
+                this.values = schemaObj.enum;
+                return;
             }
 
             var properties = schemaObj.properties;
