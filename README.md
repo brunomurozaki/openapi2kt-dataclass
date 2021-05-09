@@ -3,4 +3,7 @@
 This project attempts to parse a valid open-api json into Kotlin data classes
 
 ## How to use
-TODO
+
+```
+node index.js path_to_openapi.json ./path/to/output/folder br.org.packagename.to.be.on.classes
+```
