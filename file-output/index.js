@@ -29,7 +29,7 @@ function writeEnum(enumObj, numOfTabs = 0) {
     }
 
     content = content.slice(0, -1);
-    content += "\n}";
+    content += "\n" + tabs + "}\n";
 
     return content;
 }
@@ -51,7 +51,12 @@ function writeClass(classObj, numOfTabs = 0) {
     content += "\n" + tabs + "{\n";
 
     for(var inClzz in classObj.innerClasses) {
-        content += writeClass(classObj.innerClasses[inClzz], numOfTabs + 1) + "\n";
+        
+        if(classObj.innerClasses[inClzz].isEnum) {
+            content += writeEnum(classObj.innerClasses[inClzz], numOfTabs + 1) + "\n";
+        } else {
+            content += writeClass(classObj.innerClasses[inClzz], numOfTabs + 1) + "\n";
+        }
     }
 
     content = content.slice(0, -1);

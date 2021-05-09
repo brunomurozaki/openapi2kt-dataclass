@@ -60,7 +60,6 @@ function initProperty(parent, properties, propertyName) {
         "type": "",
         "required": false,
         "fillProperty": function(pObj) {
-            // TODO: handle ENUMs
             if(pObj.type == "object") {
                 initClass(parent.innerClasses, this.name);
                 parent.innerClasses[this.name].fillClass(pObj);
@@ -75,6 +74,11 @@ function initProperty(parent, properties, propertyName) {
                     var ref = pObj.items["$ref"].split("/");
                     this.type = "List<" + ref[ref.length -1] + ">";    
                 }
+                else if(pObj.items.enum) {
+                    initClass(parent.innerClasses, "Enum" + capitalize(this.name));
+                    parent.innerClasses["Enum" + capitalize(this.name)].fillClass(pObj.items);
+                    this.type = "List<Enum" + capitalize(this.name) + ">";
+                }
                 else {
                     this.type = "List<" + parseDataType(pObj.items, "List ->" + this.name) + ">";
                 }
@@ -82,7 +86,8 @@ function initProperty(parent, properties, propertyName) {
             } else if(pObj.type === undefined && pObj["$ref"]){
                 var ref = pObj["$ref"].split("/");
                 this.type = ref[ref.length -1];
-            } else {
+            } 
+            else {
                 this.type = parseDataType(pObj, this.name);
             }
         }
@@ -103,7 +108,9 @@ function parseDataType(pObj, pName) {
         break;
         case "number": {
             if(pObj.format == "double") {
-                dataType = "double";
+                dataType = "Double"; 
+            } else {
+                dataType = "Int"; 
             }
         }
         break;
@@ -117,6 +124,10 @@ function parseDataType(pObj, pName) {
         }
             
     }
+
+    if(dataType === undefined)
+        console.log(pName);
+
 
     return dataType;
 }
